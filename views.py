@@ -1,26 +1,38 @@
 from django.shortcuts import render
 import mysql.connector as sql
+fn=''
+ln=''
+s=''
 em=''
 pwd=''
 # Create your views here.
-def loginaction(request):
-    global em,pwd
+def signaction(request):
+    global fn,ln,s,em,pwd
     if request.method=="POST":
-        m=sql.connect(host="localhost",user="root",passwd="vivek",database='website')
+        m=sql.connect(host="localhost",user="root",passwd="2121",database='website')
         cursor=m.cursor()
         d=request.POST
         for key,value in d.items():
+            if key=="first_name":
+                fn=value
+            if key=="last_name":
+                ln=value
+            if key=="sex":
+                s=value
             if key=="email":
                 em=value
             if key=="password":
                 pwd=value
         
-        c="select * from users where email='{}' and password='{}'".format(em,pwd)
+        c="insert into users Values('{}','{}','{}','{}','{}')".format(fn,ln,s,em,pwd)
         cursor.execute(c)
-        t=tuple(cursor.fetchall())
-        if t==():
-            return render(request,'error.html')
-        else:
-            return render(request,"welcome.html")
+        m.commit()
 
-    return render(request,'login_page.html')
+    return render(request,'signup_page.html')
+
+
+
+
+
+
+  
